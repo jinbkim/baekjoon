@@ -31,6 +31,8 @@ int		main(void)
 	int		num;
 
 	scanf("%d", &num);
+	getchar();  // remove the enter in the buffer
+
 	printf("%d\n", hanoi_count(num));  // total count 
 	show_hanoi(num, '1', '2', '3');  // show how to move
 }
