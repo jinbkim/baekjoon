@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 void	star_init(char star[][2188], int num)
 {
@@ -12,6 +11,7 @@ void	star_init(char star[][2188], int num)
 		j = -1;
 		while (++j < num)
 			star[i][j] = ' ';
+		star[i][j] = '\0';
 	}
 }
 
@@ -42,16 +42,10 @@ void	change_star(char star[][2188], int x, int y, int num)
 void	show_star(char star[][2188], int num)
 {
 	int	i;
-	int j;
 	
 	i = -1;
 	while (++i < num)
-	{
-		j = -1;
-		while (++j < num)
-			printf("%c", star[i][j]);
-		printf("\n");
-	}
+		printf("%s\n", star[i]);
 }
 
 

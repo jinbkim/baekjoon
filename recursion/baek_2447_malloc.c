@@ -46,27 +46,21 @@ void	change_star(char **star, int x, int y, int num)
 	}
 }
 
-void	show_star(char **star, int num)
+void	show_star(char **star)
 {
 	int	i;
-	int j;
 	
 	i = -1;
-	while (++i < num)
-	{
-		j = -1;
-		while (++j < num)
-			printf("%c", star[i][j]);
-		printf("\n");
-	}
+	while (star[++i])
+		printf("%s\n",star[i]);
 }
 
-void	free_all(char **star, int num)
+void	free_all(char **star)
 {
 	int	i;
 	
 	i = -1;
-	while (++i < num)
+	while (star[++i])
 		free(star[i]);
 	free(star);
 }
@@ -83,7 +77,7 @@ int		main(void)
 	
 	star = star_init(num);  // allocate memory and initialize shape
 	change_star(star, 0, 0, num);  // put the star in the right place
-	show_star(star, num);
+	show_star(star);
 	
-	free_all(star, num);
+	free_all(star);
 }
