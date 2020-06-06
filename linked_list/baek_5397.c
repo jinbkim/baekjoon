@@ -175,7 +175,7 @@ int			main(void)
 	int		count;
 	int 	i;
 	
-	scanf("%d", &count)
+	scanf("%d", &count);
 	getchar();  // remove the enter in the buffer
 	
 	i = -1;
