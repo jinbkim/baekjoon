@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-char	flag[10];
 int		arr[10];
 
 void	find_sequence(int n, int m, int idx)
@@ -19,13 +18,8 @@ void	find_sequence(int n, int m, int idx)
 	i = 0;
 	while (++i <= n)
 	{
-		if (!flag[i])
-		{
-			arr[idx] = i;
-			flag[i] = 1;
-			find_sequence(n, m, idx + 1);
-			flag[i] = 0;
-		}
+		arr[idx] = i;
+		find_sequence(n, m, idx + 1);
 	}
 }
 
@@ -36,6 +30,5 @@ int		main(void)
 
 	scanf("%d %d", &n, &m);
 	memset(arr, 0, sizeof(arr));
-	memset(flag, 0, sizeof(flag));
 	find_sequence(n, m, 0);
 }

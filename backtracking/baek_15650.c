@@ -4,6 +4,17 @@
 char	flag[10];
 int		arr[10];
 
+int		check_ascending(int *arr, int m)
+{
+	int	i;
+
+	i = -1;
+	while (++i < m - 1)
+		if (arr[i + 1] < arr[i])
+			return (0);
+	return (1);
+}
+
 void	find_sequence(int n, int m, int idx)
 {
 	int	i;
@@ -11,6 +22,8 @@ void	find_sequence(int n, int m, int idx)
 	i = -1;
 	if (idx == m)
 	{
+		if (!check_ascending(arr, m))
+			return ;
 		while (++i < m)
 			printf("%d ", arr[i]);
 		printf("\n");
