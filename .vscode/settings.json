@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"ostream": "cpp",
+		"iostream": "cpp",
+		"stack": "cpp",
+		"string": "cpp",
+		"istream": "cpp",
+		"locale": "cpp",
+		"streambuf": "cpp",
+		"deque": "cpp"
+	}
+}
