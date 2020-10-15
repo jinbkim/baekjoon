@@ -7,6 +7,10 @@
 		"istream": "cpp",
 		"locale": "cpp",
 		"streambuf": "cpp",
-		"deque": "cpp"
+		"deque": "cpp",
+		"vector": "cpp",
+		"ios": "cpp",
+		"__functional_base": "cpp",
+		"queue": "cpp"
 	}
 }

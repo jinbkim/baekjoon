@@ -14,7 +14,7 @@ bool	is_possible(int mid)
 	before = arr[0];
 	for(int i=1; i<n; i++)
 	{
-		if (arr[i] - before <= mid)
+		if (mid <= arr[i] - before)
 		{
 			before = arr[i];
 			cnt++;
@@ -30,7 +30,7 @@ int		install_router(void)
 {
 	int	low, mid, high, ret;
 
-	low = arr[0];
+	low = 1;
 	high = arr[n - 1];
 	ret = 0;
 	while (low <= high)
