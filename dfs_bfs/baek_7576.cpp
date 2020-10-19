@@ -5,10 +5,10 @@
 
 using namespace std;
 
-string	map[101];
-int		visted[101][101];
+int		map[1002][1002];
+int		visted[1002][1002];
 int		dir[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-int		n, m;
+int		m, n, ret, cur_x, cur_y, next_x, next_y;
 
 void	init(void)
 {
@@ -23,13 +23,25 @@ bool	is_inside(int y, int x)
 		return (false);
 }
 
+bool	is_error()
+{
+	for(int i=0; i<n; i++)
+		for(int j=0; j<m; j++)
+			if (!map[i][j] && !visted[i][j])
+				return (true);
+	return (false);
+}
+
 int		bfs(void)
 {
 	queue< pair<int, int> >	q;
-	int	cur_x, cur_y, next_x, next_y;
-
-	q.push(pair<int, int>(0, 0));
-	visted[0][0] = 1;
+	for(int i=0; i<n; i++)
+		for(int j=0; j<m; j++)
+			if (map[i][j] == 1)
+			{
+				q.push(pair<int, int>(i, j));
+				visted[i][j] = 1;
+			}
 	while (!q.empty())
 	{
 		cur_y = q.front().first;
@@ -39,14 +51,14 @@ int		bfs(void)
 		{
 			next_x = cur_x+dir[i][0];
 			next_y = cur_y+dir[i][1];
-			if (is_inside(next_y, next_x) && map[next_y][next_x] == '1' && !visted[next_y][next_x])
+			if (is_inside(next_y, next_x) && !map[next_y][next_x] && !visted[next_y][next_x])
 			{
 				visted[next_y][next_x] = visted[cur_y][cur_x]+1;
 				q.push(pair<int, int> (next_y, next_x));
 			}
 		}
 	}
-	return (visted[n-1][m-1]);
+	return (visted[cur_y][cur_x] - 1);
 }
 
 
@@ -54,8 +66,13 @@ int		bfs(void)
 int		main(void)
 {
 	init();
-	cin>>n>>m;
+	cin>>m>>n;
 	for(int i=0; i<n; i++)
-		cin>>map[i];
-	cout<<bfs()<<'\n';
+		for(int j=0; j<m; j++)
+			cin>>map[i][j];
+	ret = bfs();
+	if (is_error())
+		cout<<-1<<'\n';
+	else
+		cout<<ret<<'\n';
 }

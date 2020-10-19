@@ -12,6 +12,8 @@
 		"ios": "cpp",
 		"__functional_base": "cpp",
 		"queue": "cpp",
-		"cstring": "cpp"
+		"cstring": "cpp",
+		"utility": "cpp",
+		"memory": "cpp"
 	}
 }
