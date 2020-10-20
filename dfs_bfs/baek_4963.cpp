@@ -26,7 +26,7 @@ int		dfs(int y, int x)
 {
 	int	next_x, next_y;
 
-	if (visted[y][x])
+	if (visted[y][x] || !map[y][x])
 		return (false);
 	else
 	{
@@ -36,10 +36,7 @@ int		dfs(int y, int x)
 			next_x = x+dir[i][0];
 			next_y = y+dir[i][1];
 			if (is_inside(next_y, next_x) && map[next_y][next_x] && !visted[next_y][next_x])
-			{
-				// cout<<"ny : "<<next_y<<", nx : "<<next_x<<'\n';
 				dfs(next_y, next_x);
-			}
 		}
 		return (true);
 	}
@@ -61,10 +58,7 @@ int		main(void)
 		for(int i=0; i<h; i++)
 			for(int j=0; j<w; j++)
 				if (dfs(i, j))
-				{
-					cout<<"i : "<<i<<", j : "<<j<<'\n';
 					ret++;
-				}
 		cout<<ret<<'\n';	
 	}
 }
