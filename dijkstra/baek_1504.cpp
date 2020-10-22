@@ -12,6 +12,9 @@ int		n, m;
 
 int 	dijkstar(int start, int end)
 {
+	for(int i=1; i<=n; i++)
+		for(int j=1; j<=n; j++)
+			min_d[i][j] = INF;
 	// cout<<"-----------------\n";
 	// cout<<"start : "<<start<<", end : "<<end<<'\n';
 	priority_queue< pair<int, int> >	pq;
@@ -67,13 +70,16 @@ int		main(void)
 	}
 	cin>>ess_v[0]>>ess_v[1];
 
-	for(int i=1; i<=n; i++)
-		for(int j=1; j<=n; j++)
-			min_d[i][j] = INF;
+	// for(int i=1; i<=n; i++)
+	// 	for(int j=1; j<=n; j++)
+	// 		min_d[i][j] = INF;
+	// cout<<dijkstar(1, ess_v[1])<<'\n';
+	// cout<<dijkstar(ess_v[1], ess_v[0])<<'\n';
+	// cout<<dijkstar(ess_v[0], n)<<'\n';
 	ret1 = dijkstar(1, ess_v[0])+dijkstar(ess_v[0], ess_v[1])+dijkstar(ess_v[1], n);
 	ret2 = dijkstar(1, ess_v[1])+dijkstar(ess_v[1], ess_v[0])+dijkstar(ess_v[0], n);
 	
-	// cout<<ret1<<'\n';
-	// cout<<ret2<<'\n';
-	cout<<min(ret1, ret2)<<'\n';
+	cout<<ret1<<'\n';
+	cout<<ret2<<'\n';
+	// cout<<min(ret1, ret2)<<'\n';
 }
