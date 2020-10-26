@@ -62,7 +62,6 @@ int		main(void)
 	{
 		cin>>from>>to>>cost;
 		vec[from].push_back(make_pair(to, cost));
-		
 	}
 	for(int i=1; i<=n; i++)
 		min_d[i] = INF;

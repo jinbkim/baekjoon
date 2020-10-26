@@ -1,45 +1,41 @@
 #include <iostream>
 #include <vector>
-#include <cstring>
 
 using namespace std;
 #define	MAX	102
+#define INF -2147483647
 
 vector< pair<int, int> >	vec[MAX];
 vector<int>	path;
-int		min_d[MAX];
+long long	min_d[MAX];
 int		pre[MAX];
+int		n, m, from, to, cost, ret, idx;
 
-int		n, m, from, to, cost, ret;
-
-void	init()
+void	init(void)
 {
-	memset(min_d, 0, sizeof(min_d));
+	for(int i=1; i<=n; i++)
+		min_d[i] = INF;
 }
 
 bool	bellman(void)
 {
-	for(int i=1; i<=n; i++)
+	for (int i=1; i<=n; i++)
 		for(int j=1; j<=n; j++)
 			for(int k=0; k<vec[j].size(); k++)
 			{
 				from = j;
 				to = vec[j][k].first;
 				cost = vec[j][k].second;
-				if (min_d[from] + cost < min_d[to])
+				if (min_d[to] < min_d[from] + cost)
 				{
 					pre[to] = from;
 					min_d[to] = min_d[from] + cost;
-					if (i == n)
-					{
-						
-						return (false);
-					}
+					if (i == n && to == n)
+						return (false); 
 				}
 			}
 	return (true);
 }
-
 
 
 
@@ -54,12 +50,12 @@ int		main(void)
 	for(int i=0; i<m; i++)
 	{
 		cin>>from>>to>>cost;
-		vec[from].push_back(make_pair(to, -cost));
+		vec[from].push_back(make_pair(to, cost));
 	}
 	ret = bellman();
 	if (ret)
 	{
-		int idx = n;
+		idx = n;
 		while (1)
 		{
 			path.push_back(idx);
