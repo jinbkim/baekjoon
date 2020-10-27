@@ -1,85 +1,96 @@
 #include <iostream>
 #include <vector>
-#include <utility>
 #include <queue>
-#include <functional>
+#include <algorithm>
 
 using namespace std;
-vector < pair<int, int> >	vec[801];
-int		min_d[801][801];
-int		INF = 2147483647;
-int		n, m;
 
-int 	dijkstar(int start, int end)
+#define INF	987654321
+#define	MAX	802
+
+vector< pair<int, int> >	vec[MAX];
+long long	min_d[MAX];
+int		n, e, from, to, cost, edge1, edge2;
+
+int		dijkstra(int start, int end)
 {
-	for(int i=1; i<=n; i++)
-		for(int j=1; j<=n; j++)
-			min_d[i][j] = INF;
-	// cout<<"-----------------\n";
-	// cout<<"start : "<<start<<", end : "<<end<<'\n';
 	priority_queue< pair<int, int> >	pq;
+	int	vtx1, vtx2, edge1, edge2;
 
-	min_d[start][start] = 0;
+	for(int i=1; i<=n; i++)
+		min_d[i] = INF;
+	min_d[start] = 0;
 	pq.push(make_pair(0, start));
 	while (!pq.empty())
 	{
-		int	vtx, edge;
-
-		vtx = pq.top().second;
-		edge = -pq.top().first;
+		vtx1 = pq.top().second;
+		edge1 = -pq.top().first;
 		pq.pop();
-		if (min_d[start][vtx] < edge || min_d[start][end] < edge)
-		{
-			// cout<<"pass!\n";
+		if (min_d[vtx1] < edge1)
 			continue ;
-		}
-		for(int i=0; i<vec[vtx].size(); i++)
+		for(int i=0; i<vec[vtx1].size(); i++)
 		{
-			int	next_vtx, next_edge;
-
-			next_vtx = vec[vtx][i].first;
-			next_edge = vec[vtx][i].second+edge;
-			if (next_edge < min_d[vtx][next_vtx])
+			vtx2 = vec[vtx1][i].first;
+			edge2 = vec[vtx1][i].second+edge1;
+			if (edge2 < min_d[vtx2])
 			{
-				// cout<<"vtx : "<<vtx<<", next_vtx : "<<next_vtx<<'\n';
-				min_d[vtx][next_vtx] = next_edge;
-				pq.push(make_pair(-next_edge, next_vtx));
+				min_d[vtx2] = edge2;
+				pq.push(make_pair(-edge2, vtx2));
 			}
 		}
 	}
-	// cout<<"result : "<<min_d[start][end]<<'\n';
-	return (min_d[start][end]);
+	return (min_d[end]);
 }
+
+
 
 int		main(void)
 {
-	int		in[3];
-	int		ess_v[2];
-	int		ret1, ret2;
-
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	cin>>n>>m;
-	for(int i=0; i<m; i++)
-	{
-		cin>>in[0]>>in[1]>>in[2];
-		vec[in[0]].push_back(make_pair(in[1], in[2]));
-		vec[in[1]].push_back(make_pair(in[0], in[2]));
-	}
-	cin>>ess_v[0]>>ess_v[1];
+	int		path[6];
+	int		ret1, ret2;
 
-	// for(int i=1; i<=n; i++)
-	// 	for(int j=1; j<=n; j++)
-	// 		min_d[i][j] = INF;
-	// cout<<dijkstar(1, ess_v[1])<<'\n';
-	// cout<<dijkstar(ess_v[1], ess_v[0])<<'\n';
-	// cout<<dijkstar(ess_v[0], n)<<'\n';
-	ret1 = dijkstar(1, ess_v[0])+dijkstar(ess_v[0], ess_v[1])+dijkstar(ess_v[1], n);
-	ret2 = dijkstar(1, ess_v[1])+dijkstar(ess_v[1], ess_v[0])+dijkstar(ess_v[0], n);
-	
-	cout<<ret1<<'\n';
-	cout<<ret2<<'\n';
-	// cout<<min(ret1, ret2)<<'\n';
+	cin>>n>>e;
+	for(int i=0; i<e; i++)
+	{
+		cin>>from>>to>>cost;
+		vec[from].push_back(make_pair(to, cost));
+		vec[to].push_back(make_pair(from, cost));
+	}
+	cin>>edge1>>edge2;
+	path[0] = dijkstra(1, edge1);
+	path[1] = dijkstra(edge1, edge2);
+	path[2] = dijkstra(edge2, n);
+	path[3] = dijkstra(1, edge2);
+	path[4] = dijkstra(edge2, edge1);
+	path[5] = dijkstra(edge1, n);
+	ret1 = 0;
+	ret2 = 0;
+	for(int i=0; i<3; i++)
+	{
+		if(path[i] == INF)
+		{
+			ret1 = INF;
+			break ;
+		}
+		ret1 += path[i];
+	}
+	for(int i=3; i<6; i++)
+	{
+		if(path[i] == INF)
+		{
+			ret2 = INF;
+			break ;
+		}
+		ret2 += path[i];
+	}
+	if (ret1 == INF && ret2 == INF)
+	{
+		cout<<-1<<'\n';
+		return (0);
+	}
+	cout<<min(ret1, ret2)<<'\n';
 }

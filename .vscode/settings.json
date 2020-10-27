@@ -16,6 +16,7 @@
 		"utility": "cpp",
 		"memory": "cpp",
 		"iosfwd": "cpp",
-		"__split_buffer": "cpp"
+		"__split_buffer": "cpp",
+		"algorithm": "cpp"
 	}
 }
