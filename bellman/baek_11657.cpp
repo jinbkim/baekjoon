@@ -1,55 +1,50 @@
 #include <iostream>
 #include <vector>
-#include <utility>
-
+#include <cstring>
 using namespace std;
 
-vector< pair<int, int> >	vec[502];
-long long	min_d[502];
-int		INF = 2147483647;
+#define INF	987654321
+#define	MAX	502
+
+typedef	struct 	s_info
+{
+	int		s;
+	int		e;
+	int		w;
+}				t_info;
+
+vector<t_info>	vec;
+t_info	info;
+long long	min_d[MAX];
 int		n, m, from, to, cost;
 
-
-
-void	bellman(void)
+void	init(void)
 {
-	min_d[1] = 0;
-	for(int i=1; i<=n-1; i++)
-		for(int j=1; j<=n; j++)
-			for(int k=0; k<vec[j].size(); k++)
-			{
-				from = j;
-				to = vec[j][k].first;
-				cost = vec[j][k].second;
-				if (min_d[from] == INF)
-					continue ;
-				if (min_d[from]+cost < min_d[to])
-					min_d[to] = min_d[from]+cost;
-			}
-	for(int j=1; j<=n; j++)
-	{
-		for(int k=0; k<vec[j].size(); k++)
+	for(int i=2; i<=n; i++)
+		min_d[i] = INF;
+}
+
+bool	bellman(void)
+{
+	for(int i=0; i<=n*2; i++)
+		for(int j=0; j<vec.size(); j++)
 		{
-			from = j;
-			to = vec[j][k].first;
-			cost = vec[j][k].second;
+			from = vec[j].s;
+			to = vec[j].e;
+			cost = vec[j].w;
 			if (min_d[from] == INF)
 				continue ;
 			if (min_d[from]+cost < min_d[to])
 			{
-				cout<<-1<<'\n';
-				return ;
+				min_d[to] = min_d[from]+cost;
+				if (n < i)
+					return (true);
 			}
 		}
-	}
-	for(int i=2; i<=n; i++)
-	{
-		if (min_d[i] == INF)
-			cout<<-1<<'\n';
-		else
-			cout<<min_d[i]<<'\n';
-	}
+	return (false);
 }
+
+
 
 int		main(void)
 {
@@ -58,12 +53,22 @@ int		main(void)
 	cout.tie(NULL);
 
 	cin>>n>>m;
+	init();
 	for(int i=0; i<m; i++)
 	{
-		cin>>from>>to>>cost;
-		vec[from].push_back(make_pair(to, cost));
+		cin>>info.s>>info.e>>info.w;
+		vec.push_back(info);
 	}
-	for(int i=1; i<=n; i++)
-		min_d[i] = INF;
-	bellman();
+	if (bellman())
+	{
+		cout<<"-1\n";
+		return (0);
+	}
+	for(int i=2; i<=n; i++)
+	{
+		if (min_d[i] == INF)
+			cout<<"-1\n";
+		else
+			cout<<min_d[i]<<'\n';
+	}
 }

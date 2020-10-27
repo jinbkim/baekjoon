@@ -1,42 +1,46 @@
 #include <iostream>
 #include <vector>
-#include <utility>
-#include <cstring>
-
+#include <algorithm>
 using namespace std;
+
+#define	INF	987654321
 #define	MAX	502
 
-vector< pair<int, int>	>	vec[MAX];
-long long	INF = 2147483647;
+typedef struct	s_info
+{
+	int		s;
+	int		e;
+	int		w;
+}				t_info;
+
+vector<t_info>	vec;
+t_info	info;
 long long	min_d[MAX];
-int		tc, n, m, w, to, from, cost, ret;
+int		tc, n, m, w, from, to, cost;
 
 void	init(void)
 {
+	vec.clear();
 	for(int i=1; i<=n; i++)
-	{
 		min_d[i] = INF;
-		vec[i].clear();
-	}
 	min_d[1] = 0;
 }
 
 bool	bellman(void)
 {
-	for(int i=1; i<=n; i++)
-		for(int j=1; j<=n; j++)
-			for(int k=0; k<vec[j].size(); k++)
+	for(int i=1; i<=n*2; i++)
+		for(int j=0; j<vec.size(); j++)
+		{
+			from = vec[j].s;
+			to = vec[j].e;
+			cost = vec[j].w;
+			if (min_d[from]+cost < min_d[to])
 			{
-				from = j;
-				to = vec[j][k].first;
-				cost = vec[j][k].second;
-				if (min_d[from]+cost < min_d[to])
-				{
-					min_d[to] = min_d[from]+cost;
-					if (i == n)
-						return (true); 
-				}
+				min_d[to] = min_d[from]+cost;
+				if (n < i)
+					return (true);
 			}
+		}
 	return (false);
 }
 
@@ -51,21 +55,22 @@ int		main(void)
 	cin>>tc;
 	for(int i=0; i<tc; i++)
 	{
-		cin>>n>>m>>w;
 		init();
+		cin>>n>>m>>w;
 		for(int j=0; j<m; j++)
 		{
-			cin>>from>>to>>cost;
-			vec[from].push_back(make_pair(to, cost));
-			vec[to].push_back(make_pair(from, cost));
+			cin>>info.s>>info.e>>info.w;
+			vec.push_back(info);
+			swap(info.s, info.e);
+			vec.push_back(info);
 		}
 		for(int j=0; j<w; j++)
 		{
-			cin>>from>>to>>cost;
-			vec[from].push_back(make_pair(to, -cost));
+			cin>>info.s>>info.e>>info.w;
+			info.w *= -1;
+			vec.push_back(info);
 		}
-		ret = bellman();
-		if (ret)
+		if (bellman())
 			cout<<"YES\n";
 		else
 			cout<<"NO\n";

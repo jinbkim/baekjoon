@@ -15,6 +15,7 @@
 		"cstring": "cpp",
 		"utility": "cpp",
 		"memory": "cpp",
-		"iosfwd": "cpp"
+		"iosfwd": "cpp",
+		"__split_buffer": "cpp"
 	}
 }
