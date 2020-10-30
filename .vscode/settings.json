@@ -29,6 +29,7 @@
 		"set": "cpp",
 		"string_view": "cpp",
 		"unordered_map": "cpp",
-		"complex": "cpp"
+		"complex": "cpp",
+		"cmath": "cpp"
 	}
 }
