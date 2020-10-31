@@ -1,80 +1,64 @@
 #include <iostream>
-#include <cmath>
-
+#include <algorithm>
 using namespace std;
 
-int		boundary[11], range;
+#define MAX 5002
 
-int		find_size(int n)
+int     arr[MAX];
+int     n, m, max_range = 0;
+
+int		count_section(int diff)
 {
-	int		size;
+	int		i, ret, min_val, max_val;
 
-	for(int i=1; i<=8; i++)
-		if (n < pow(10, i))
+	ret = 1;
+	min_val = arr[0];
+	max_val = arr[0];
+	for(int i=1; i<n; i++)
+	{
+		min_val = min(arr[i], min_val);
+		max_val = max(arr[i], max_val);
+		if (diff < max_val-min_val)
 		{
-			range = i;
-			break ;
+			min_val = arr[i];
+			max_val = arr[i];
+			ret++;
 		}
-	size = boundary[range-2] + (n-pow(10,range-1)+1)*(range);
-	// cout<<"range : "<<range<<'\n';
-	// cout<<"size : "<<size<<'\n';
-	// cout<<"n : "<<n<<'\n';
-	return (size);
+	}
+	return (ret);
 }
 
-int		find_num(int start, int end, int ans)
+int     bs(int left, int right)
 {
-	int		mid, size;
+	int		mid, ans;
 
-	while (start<=end)
+	while(left <= right)
 	{
-		mid = (start+end)/2;
-		size = find_size(mid);
-		// cout<<"start : "<<start<<", end : "<<end<<'\n';
-		// cout<<"size : "<<size<<'\n';
-		// cout<<"range : "<<range<<'\n';
-		// cout<<"ans : "<<ans<<'\n';
-		if (size < ans)
-			start = mid+1;
+		mid = (left+right)/2;
+		if (count_section(mid) <= m)
+		{
+			ans = mid;
+			right = mid-1;
+		}
 		else
-			end = mid-1;
+			left = mid+1;
 	}
-	int ret1 = (int)pow(10, size-ans);
-	int ret2 = ((int)mid/ret1);
-	ret2 = ret2 % 10;
-	// int ret2 = (mid/(int)pow(10, size-ans)) % 10;
-	cout<<"start : "<<start<<", end : "<<end<<'\n';
-		cout<<"size : "<<size<<'\n';
-		cout<<"range : "<<range<<'\n';
-		cout<<"ans : "<<ans<<'\n';
-	cout<<"mid : "<<mid<<", pow(10, size-ans) : "<<pow(10, size-ans)<<'\n';
-	return (ret2);
-}
-
-int		bs(int n, int k)
-{
-	for(int i=0; i<=8; i++)
-	{
-		boundary[i] = 9;
-		for(int j=0; j<i; j++)
-			boundary[i] *= 10;
-		boundary[i] *= i+1;
-	}
-	for(int i=1; i<=8; i++)
-		boundary[i] += boundary[i-1];
-	if (find_size(n) < k)
-		return (-1);
-	return(find_num(1, n, k));
+	return (ans);
 }
 
 
-int		main(void)
+
+int     main(void)
 {
-	cin.tie(NULL);
-	ios::sync_with_stdio(false);
+ 	ios_base::sync_with_stdio(false);
+  	cin.tie(NULL);
+  	cout.tie(NULL);
 
-	int		n, k;
-	cin>>n>>k;
-
-	cout<<bs(n, k)<<'\n';
+    cin>>n>>m;
+    for(int i=0; i<n; i++)
+    {
+        cin>>arr[i];
+		max_range = max(max_range, arr[i]);
+    }
+    cout<<bs(0, max_range)<<'\n';
 }
