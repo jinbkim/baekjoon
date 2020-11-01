@@ -1,12 +1,11 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
-#define MAX	60000000
+#define MAX	60000000000
 
 vector<long long>	vec;
-int		n, m, cnt, upper_ans;
+long long	n, m, cnt;
 
 long long	count_num(long long val)
 {
@@ -15,20 +14,16 @@ long long	count_num(long long val)
 	ret = m;
 	for(int i=0; i<m; i++)
 		ret += val/vec[i];
-	// for(int i=1; i<=val; i++)
-	// 	for(int j=0; j<m; j++)
-	// 		if (!(i%vec[j]))
-	// 			ret++;
 	return (ret);
 }
 
-int		bs(long long left, long long right)
+long long	bs(long long left, long long right)
 {
-	long long	mid, ans, cnt, diff, idx;
+	long long	mid, ans, diff, idx;
 
+	ans = 0;
 	while (left <= right)
 	{
-		// cout<<"left : "<<left<<", right : "<<right<<'\n';
 		mid = (left+right)/2;
 		if (n <= count_num(mid))
 		{
@@ -38,30 +33,29 @@ int		bs(long long left, long long right)
 		else
 			left = mid+1;
 	}
-	upper_ans = count_num(ans);
-	diff = count_num(ans) - n;
-	// cout<<"ans : "<<ans<<'\n';
-	// cout<<"upper_ans : "<<upper_ans<<'\n';
-	// cout<<"diff : "<<diff<<'\n';
-	cnt = 0;
+	diff = count_num(ans)-n;
 	idx = m;
-	while (cnt <= diff && idx--)
+	while (1)
 	{
-		if (!(ans % vec[idx]))
-			cnt++;
+		idx--;
+		if (!(ans%vec[idx]))
+			diff--;
+		if (diff < 0)
+			break;
 	}
-	return(vec[idx]);
+	return (idx+1);
 }
+
 
 
 
 int		main(void)
 {
-	long long	data;
-
 	ios_base::sync_with_stdio(false);
   	cin.tie(NULL);
   	cout.tie(NULL);
+
+	long long	data;
 
 	cin>>n>>m;
 	for(int i=0; i<m; i++)
@@ -69,6 +63,5 @@ int		main(void)
 		cin>>data;
 		vec.push_back(data);
 	}
-	sort(vec.begin(), vec.end());
 	cout<<bs(0, MAX)<<'\n';
 }

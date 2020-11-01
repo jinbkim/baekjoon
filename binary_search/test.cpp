@@ -1,41 +1,31 @@
 #include <iostream>
-#include <algorithm>
+#include <vector>
 using namespace std;
 
-#define MAX 5002
+#define MAX	60000000000
 
-int     arr[MAX];
-int     n, m, max_range = 0;
+vector<long long>	vec;
+long long	n, m, cnt;
 
-int		count_section(int diff)
+long long	count_num(long long val)
 {
-	int		i, ret, min_val, max_val;
+	long long	ret;
 
-	ret = 1;
-	min_val = arr[0];
-	max_val = arr[0];
-	for(int i=1; i<n; i++)
-	{
-		min_val = min(arr[i], min_val);
-		max_val = max(arr[i], max_val);
-		if (diff < max_val-min_val)
-		{
-			min_val = arr[i];
-			max_val = arr[i];
-			ret++;
-		}
-	}
+	ret = m;
+	for(int i=0; i<m; i++)
+		ret += val/vec[i];
 	return (ret);
 }
 
-int     bs(int left, int right)
+long long	bs(long long left, long long right)
 {
-	int		mid, ans;
+	long long	mid, ans, diff, idx;
 
-	while(left <= right)
+	ans = 0;
+	while (left <= right)
 	{
 		mid = (left+right)/2;
-		if (count_section(mid) <= m)
+		if (n <= count_num(mid))
 		{
 			ans = mid;
 			right = mid-1;
@@ -43,22 +33,35 @@ int     bs(int left, int right)
 		else
 			left = mid+1;
 	}
-	return (ans);
+	diff = count_num(ans)-n;
+	idx = m;
+	while (1)
+	{
+		idx--;
+		if (!(ans%vec[idx]))
+			diff--;
+		if (diff < 0)
+			break;
+	}
+	return (idx+1);
 }
 
 
 
-int     main(void)
+
+int		main(void)
 {
- 	ios_base::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
   	cin.tie(NULL);
   	cout.tie(NULL);
 
-    cin>>n>>m;
-    for(int i=0; i<n; i++)
-    {
-        cin>>arr[i];
-		max_range = max(max_range, arr[i]);
-    }
-    cout<<bs(0, max_range)<<'\n';
+	long long	data;
+
+	cin>>n>>m;
+	for(int i=0; i<m; i++)
+	{
+		cin>>data;
+		vec.push_back(data);
+	}
+	cout<<bs(0, MAX)<<'\n';
 }
