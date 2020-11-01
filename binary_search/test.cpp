@@ -1,67 +1,54 @@
 #include <iostream>
-#include <vector>
+#include <algorithm>
 using namespace std;
 
-#define MAX	60000000000
+#define	MAX	200002
 
-vector<long long>	vec;
-long long	n, m, cnt;
+int		arr[MAX];
+int		n, c;
 
-long long	count_num(long long val)
+int		count(int val)
 {
-	long long	ret;
+	int		ret=1, spot=arr[0];
 
-	ret = m;
-	for(int i=0; i<m; i++)
-		ret += val/vec[i];
+	for(int i=1; i<n; i++)
+		if (val <= arr[i]-spot)
+		{
+			spot = arr[i];
+			ret++;
+		}
 	return (ret);
 }
 
-long long	bs(long long left, long long right)
+int		bs(long long left, long long right)
 {
-	long long	mid, ans, diff, idx;
+	long long mid, ans;
 
-	ans = 0;
 	while (left <= right)
 	{
 		mid = (left+right)/2;
-		if (n <= count_num(mid))
+		if (c <= count(mid))
 		{
 			ans = mid;
-			right = mid-1;
+			left = mid+1;
 		}
 		else
-			left = mid+1;
+			right = mid-1;
 	}
-	diff = count_num(ans)-n;
-	idx = m;
-	while (1)
-	{
-		idx--;
-		if (!(ans%vec[idx]))
-			diff--;
-		if (diff < 0)
-			break;
-	}
-	return (idx+1);
-}
-
+	return(ans);
+}	
 
 
 
 int		main(void)
 {
 	ios_base::sync_with_stdio(false);
-  	cin.tie(NULL);
-  	cout.tie(NULL);
+   	cin.tie(NULL);
+   	cout.tie(NULL);
 
-	long long	data;
-
-	cin>>n>>m;
-	for(int i=0; i<m; i++)
-	{
-		cin>>data;
-		vec.push_back(data);
-	}
-	cout<<bs(0, MAX)<<'\n';
+	cin>>n>>c;
+	for(int i=0; i<n; i++)
+		cin>>arr[i];
+	sort(arr, arr+n);
+	cout<<bs(1, 1000000000)<<'\n';
 }

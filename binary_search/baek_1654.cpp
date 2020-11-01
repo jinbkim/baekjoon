@@ -1,57 +1,57 @@
 #include <iostream>
-
+#include <algorithm>
 using namespace std;
 
-int		arr[10001];
-int		n, k, max_val;
+#define	MAX	10002
 
-bool	is_possible(long long mid)
+long long	arr[MAX];
+long long	k, n;
+
+bool	is_possible(long long val)
 {
-	int	val = 0;
+	long long 	cnt = 0;
 
 	for(int i=0; i<k; i++)
-		val += arr[i]/mid;
-	if (val < n)
-		return (false);
-	else
+		cnt += arr[i]/val;
+	if (n <= cnt)
 		return (true);
+	else
+		return (false);
 }
 
-int		cut_line(void)
+long long	bs(long long left, long long right)
 {
-	long long	start, mid, end;
-	int			ret;
+	long long	mid, ans;
 
-	start = 1;
-	end = max_val;
-	ret = 0;
-	while (start<=end)
+	while (left <= right)
 	{
-		mid = (start+end)/2;
+		mid = (left+right)/2;
 		if (is_possible(mid))
 		{
-			ret = mid;
-			start = mid+1;
+			left = mid+1;
+			ans = mid;
 		}
 		else
-			end = mid-1;
+			right = mid-1;
 	}
-	return (ret);
+	return (ans);
 }
 
 
 
 int		main(void)
 {
-	cin.tie(NULL);
-	ios::sync_with_stdio(false);
+   	ios_base::sync_with_stdio(false);
+  	cin.tie(NULL);
+  	cout.tie(NULL);
+
+	long long	max_range = 0;
 
 	cin>>k>>n;
-	max_val = 0;
 	for(int i=0; i<k; i++)
 	{
 		cin>>arr[i];
-		max_val = max(max_val, arr[i]);
+		max_range = max(max_range, arr[i]);
 	}
-	cout<<cut_line()<<'\n';
+	cout<<bs(1, max_range)<<'\n';
 }
