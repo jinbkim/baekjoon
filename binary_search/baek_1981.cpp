@@ -1,47 +1,45 @@
 #include <iostream>
-#include <cstring>
 #include <algorithm>
-#include <queue>
+#include <cstring>
 using namespace std;
 
-#define	MAX	202
+#define MAX	202
 
+bool	visited[MAX][MAX];
 int		map[MAX][MAX];
 int		dir[4][2] = {{0,-1}, {0,1}, {-1,0}, {1,0}};
-int		visited[MAX][MAX];
-int		n, min_range = MAX, max_range = 0;
+int		n, map_max=0, map_min=MAX;
 
-bool	bfs(int val)
+void	dfs(int y, int x)
 {
-	queue< pair<int, int> >	q;
-	int		x, y, new_x, new_y;
+	int		next_x, next_y;
 
-	for(int i=min_range; i<=max_range; i++)
+	if (visited[y][x])
+		return ;
+	visited[y][x] = true;
+	for(int i=0; i<4; i++)
 	{
-		memset(visited, true, sizeof(visited));
+		next_x = x+dir[i][0];
+		next_y = y+dir[i][1];
+		if (1<=next_x && next_x<=n && 1<=next_y && next_y<=n)
+			dfs(next_y, next_x);
+	}
+}
+
+bool	is_possible (int val)
+{
+	for(int i=map_min; i<=map_max; i++)
+	{
+		if (map[1][1]<i ||  i+val<map[1][1] || map[n][n]<i || i+val<map[n][n])
+			continue ;
+		memset(visited, true, sizeof(visited));	
 		for(int j=1; j<=n; j++)
 			for(int k=1; k<=n; k++)
-				if (i <= map[j][k] && map[j][k] <= i+val)
+				if (i<=map[j][k] && map[j][k]<=i+val)
 					visited[j][k] = false;
-		q.push(make_pair(1, 1));
-		while (!q.empty())
-		{
-			x = q.front().second;
-			y = q.front().first;
-			q.pop();
-			if (visited[y][x])
-				continue ;
-			visited[y][x] = true;
-			if (y == n && x == n)
-				return (true);
-			for(int j=0; j<4; j++)
-			{
-				new_x = x+dir[j][0];
-				new_y = y+dir[j][1];
-				if (1 <= new_x && new_x <= n && 1 <= new_y && new_y <= n)
-					q.push(make_pair(new_y, new_x));
-			}
-		}
+		dfs(1, 1);
+		if (visited[n][n])
+			return (true);
 	}
 	return (false);
 }
@@ -53,7 +51,7 @@ int		bs(int left, int right)
 	while (left <= right)
 	{
 		mid = (left+right)/2;
-		if (bfs(mid))
+		if (is_possible(mid))
 		{
 			ans = mid;
 			right = mid-1;
@@ -69,16 +67,16 @@ int		bs(int left, int right)
 int		main(void)
 {
 	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
 	cin>>n;
 	for(int i=1; i<=n; i++)
 		for(int j=1; j<=n; j++)
 		{
 			cin>>map[i][j];
-			min_range = min(min_range, map[i][j]);
-			max_range = max(max_range, map[i][j]);
+			map_max = max(map_max, map[i][j]);
+			map_min = min(map_min, map[i][j]);
 		}
-	cout<<bs(0, max_range)<<'\n';
+	cout<<bs(0, map_max)<<'\n';
 }

@@ -1,30 +1,23 @@
-#include <iostream>
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
-
 using namespace std;
 
-double	x, y, c;
+double		x, y, c;
 
-double	bs(void)
+double	bs(double left, double right)
 {
-	double l, r, m, h1, h2, h;
+	double	mid;
 
-	l = 0;
-	r = min(x, y);
-	for(int i=0; i<10000; i++)
+	while (0.0001 <= right-left)
 	{
-		m = (l+r) / 2;
-		h1 = sqrt(x*x-m*m);
-		h2 = sqrt(y*y-m*m);
-		h = (h1*h2)/(h1+h2);
-		if (c < h)
-			l=m;
+		mid = (left+right)/2;
+		if (1/c <= (1/sqrt(y*y - mid*mid)) + (1/sqrt(x*x - mid*mid)))
+			right = mid;
 		else
-			r=m;
+			left = mid;
 	}
-	return (m);
+	return (mid);
 }
 
 
@@ -32,5 +25,5 @@ double	bs(void)
 int		main(void)
 {
 	scanf("%lf %lf %lf", &x, &y, &c);
-	printf("%.3lf\n",bs());
+	printf("%.3lf", bs(0, min(x, y)));
 }

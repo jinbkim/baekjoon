@@ -3,48 +3,43 @@
 #include <cstring>
 using namespace std;
 
-#define	MAX	100002
+#define MAX 10002
 
 vector< pair<int, int> >	vec[MAX];
-int 	visited[MAX];
-int		n, m, from, to, cost, range;
+bool	visited[MAX];
+int		n, m, from, to, cost;
 
-void	init(void)
+void	dfs(int edge, int val)
 {
-	range = 0;
-}
-
-void	dfs(int idx, int cost)
-{
-	if (visited[idx])
+	if (visited[edge])
 		return ;
-	visited[idx] = true;
-	for(int i=0; i<vec[idx].size(); i++)
-		if (cost <= vec[idx][i].second)
-			dfs(vec[idx][i].first, cost);
+	visited[edge] = true;
+	for(int i=0; i<vec[edge].size(); i++)
+		if (val <= vec[edge][i].second)
+			dfs(vec[edge][i].first, val);
 }
 
-bool	is_possible(int cost)
+bool 	is_possible(int val)
 {
 	memset(visited, 0, sizeof(visited));
-	dfs(from ,cost);
+	dfs(from, val);
 	if (visited[to])
 		return (true);
 	else
 		return (false);
 }
 
-int		bs(int left, int right)
+int		bs(long long left, long long right)
 {
-	int		mid, ans;
-	
-	while(left <= right)
+	long long	mid, ans;
+
+	while (left <= right)
 	{
 		mid = (left+right)/2;
 		if (is_possible(mid))
 		{
-			ans = mid;
 			left = mid+1;
+			ans = mid;
 		}
 		else
 			right = mid-1;
@@ -56,20 +51,17 @@ int		bs(int left, int right)
 
 int		main(void)
 {
-	ios_base::sync_with_stdio(false);
-   	cin.tie(NULL);
-   	cout.tie(NULL);
+  	ios_base::sync_with_stdio(false);
+  	cin.tie(NULL);
+  	cout.tie(NULL);
 
-	init();
 	cin>>n>>m;
 	for(int i=0; i<m; i++)
 	{
 		cin>>from>>to>>cost;
 		vec[from].push_back(make_pair(to, cost));
 		vec[to].push_back(make_pair(from, cost));
-		if (range < cost)
-			range = cost;
 	}
-	cin>>from>>to;
-	cout<<bs(1, range)<<'\n';
+	cin>>from>>cost;
+	cout<<bs(1, 1000000000)<<'\n';
 }

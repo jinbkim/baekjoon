@@ -1,43 +1,38 @@
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
 #define	MAX 100002
 
-int		arr1[MAX], arr2[MAX];
-int		n, m, max_range;
+long long	arr[MAX];
+long long	n, m;
 
-int		get_m(int val)
+long long	count(long long val)
 {
-	int i, temp, ret;
+	long long	ret = 1, sum = 0;
 
-	ret = 1;
-	temp = 0;
-	i=-1;
-	while (++i != n)
+	for(int i=0; i<n; i++)
 	{
-		temp += arr1[i];
-		if (val < arr1[i])
-			return (MAX);
-		if (val < temp)
+		if (val < arr[i])
+			return (m+1);
+		sum += arr[i];
+		if (val < sum)
 		{
-			temp = arr1[i];
 			ret++;
+			sum = arr[i];
 		}
 	}
 	return (ret);
 }
 
-int		bs(void)
+long long	bs(long long left, long long right)
 {
-	int	left, right, mid, ans;
+	long long mid, ans, cnt;
 
-	left = 1;
-	right = max_range;
 	while (left <= right)
 	{
 		mid = (left+right)/2;
-		if (m < get_m(mid))
+		cnt = count(mid);
+		if (m < cnt)
 			left = mid+1;
 		else
 		{
@@ -52,15 +47,12 @@ int		bs(void)
 
 int		main(void)
 {
+	ios_base::sync_with_stdio(false);
+  	cin.tie(NULL);
+  	cout.tie(NULL);
+
 	cin>>n>>m;
 	for(int i=0; i<n; i++)
-	{
-		cin>>arr1[i];
-		arr2[i] = arr1[i];
-	}
-	sort(arr2, arr2+n);
-	max_range = 0;
-	for(int i=0; i<=n/m; i++)
-		max_range += arr2[n-1-i];
-	cout<<bs()<<'\n';
+		cin>>arr[i];
+	cout<<bs(1, 1000000000)<<'\n';
 }

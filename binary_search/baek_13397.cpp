@@ -1,41 +1,38 @@
 #include <iostream>
 #include <algorithm>
-using namespace std;
+using namespace	std;
 
-#define MAX 5002
+#define MAX	10002
 
-int     arr[MAX];
-int     n, m, max_range = 0;
+int		arr[MAX];
+int		n, m;
 
-int		count_section(int diff)
+int		count(int val)
 {
-	int		i, ret, min_val, max_val;
+	int		ret=1, arr_min=MAX, arr_max=0;
 
-	ret = 1;
-	min_val = arr[0];
-	max_val = arr[0];
-	for(int i=1; i<n; i++)
+	for(int i=0; i<n; i++)
 	{
-		min_val = min(arr[i], min_val);
-		max_val = max(arr[i], max_val);
-		if (diff < max_val-min_val)
+		arr_min = min(arr_min, arr[i]);
+		arr_max = max(arr_max, arr[i]);
+		if (val < arr_max-arr_min)
 		{
-			min_val = arr[i];
-			max_val = arr[i];
 			ret++;
+			arr_min = arr[i];
+			arr_max = arr[i];
 		}
 	}
 	return (ret);
 }
 
-int     bs(int left, int right)
+int		bs(int left, int right)
 {
 	int		mid, ans;
 
-	while(left <= right)
+	while (left <= right)
 	{
 		mid = (left+right)/2;
-		if (count_section(mid) <= m)
+		if (count(mid) <= m)
 		{
 			ans = mid;
 			right = mid-1;
@@ -48,17 +45,14 @@ int     bs(int left, int right)
 
 
 
-int     main(void)
+int		main(void)
 {
- 	ios_base::sync_with_stdio(false);
-  	cin.tie(NULL);
-  	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    cin>>n>>m;
-    for(int i=0; i<n; i++)
-    {
-        cin>>arr[i];
-		max_range = max(max_range, arr[i]);
-    }
-    cout<<bs(0, max_range)<<'\n';
+	cin>>n>>m;
+	for(int i=0; i<n; i++)
+		cin>>arr[i];
+	cout<<bs(0, MAX)<<'\n';
 }
