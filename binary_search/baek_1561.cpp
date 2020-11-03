@@ -1,31 +1,26 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
-#define MAX	60000000000
+long long	arr[10002];
+long long	n, m;
 
-vector<long long>	vec;
-long long	n, m, cnt;
-
-long long	count_num(long long val)
+long long	count(long long val)
 {
-	long long	ret;
-
-	ret = m;
-	for(int i=0; i<m; i++)
-		ret += val/vec[i];
+	long long	ret=m;
+	
+	for(int i=1; i<=m; i++)
+		ret += val/arr[i];
 	return (ret);
 }
 
 long long	bs(long long left, long long right)
 {
-	long long	mid, ans, diff, idx;
+	long long	mid, ans, diff;
 
-	ans = 0;
 	while (left <= right)
 	{
 		mid = (left+right)/2;
-		if (n <= count_num(mid))
+		if (n <= count(mid))
 		{
 			ans = mid;
 			right = mid-1;
@@ -33,35 +28,24 @@ long long	bs(long long left, long long right)
 		else
 			left = mid+1;
 	}
-	diff = count_num(ans)-n;
-	idx = m;
+	diff = count(ans)-n;
 	while (1)
 	{
-		idx--;
-		if (!(ans%vec[idx]))
+		if (!(ans % arr[m]))
 			diff--;
 		if (diff < 0)
-			break;
+			break ;
+		m--;
 	}
-	return (idx+1);
+	return (m);
 }
-
 
 
 
 int		main(void)
 {
-	ios_base::sync_with_stdio(false);
-  	cin.tie(NULL);
-  	cout.tie(NULL);
-
-	long long	data;
-
 	cin>>n>>m;
-	for(int i=0; i<m; i++)
-	{
-		cin>>data;
-		vec.push_back(data);
-	}
-	cout<<bs(0, MAX)<<'\n';
+	for(int i=1; i<=m; i++)
+		cin>>arr[i];
+	cout<<bs(0, 60000000002)<<'\n';
 }
