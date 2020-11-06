@@ -4,36 +4,24 @@
 using namespace std;
 
 vector< pair<int, int> >	jewerly;
-vector< pair <int, bool> >	bag;
-vector< pair<int, bool> >::iterator	iter;
+vector<int>	bag;
+vector<int>::iterator	iter;
 int		n, k, weight, price;
 
 int		greedy(void)
 {
-	int		ret=0, cnt=0;
+	int		ret=0;
 	
 	for(int i=n-1; 0<=i; i--)
 	{
 		iter = lower_bound(bag.begin(), bag.end(), jewerly[i].second);
-		if (iter == bag.end() || iter.second == true)
+		if (*iter < jewerly[i].second)
 			continue ;
-		cnt++;
-		if (cnt == k)
-			break ;
-		// for(int j=0; j<k; j++)
-		// {
-		// 	if (bag[j].second)
-		// 		continue ;
-		// 	if (jewerly[i].second <= bag[j].first)
-		// 	{
-		// 		ret += jewerly[i].first;
-		// 		bag[j].second = true;
-		// 		cnt++;
-		// 		break ;
-		// 	}
-		// }
-		// if (cnt == k)
-		// 	break ;
+		ret += jewerly[i].first;
+		bag.erase(iter);
+		k--;
+		if (!k)
+			break;
 	}
 	return (ret);
 }
@@ -56,7 +44,7 @@ int		main(void)
 	for(int i=0; i<k; i++)
 	{
 		cin>>weight;
-		bag.push_back(make_pair(weight, false));
+		bag.push_back(weight);
 	}
 	sort(bag.begin(), bag.end());
 	cout<<greedy()<<'\n';
