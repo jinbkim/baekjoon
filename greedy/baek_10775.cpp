@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 #define MAX	100002
@@ -17,13 +18,9 @@ int		greedy(void)
 	{
 		if (vec.empty())
 			break ;
-		iter = lower_bound(vec.begin(), vec.end(), ap[i]);
-		if (iter == vec.begin() && ap[i] < *iter)
+		iter = upper_bound(vec.begin(), vec.end(), ap[i]);
+		if (iter == vec.begin())
 			break ;
-		else if (iter == vec.end())
-			vec.erase(iter-1);
-		else if (ap[i] == *iter)
-			vec.erase(iter);
 		else
 			vec.erase(iter-1);
 		ret++;

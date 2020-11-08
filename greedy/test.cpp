@@ -1,27 +1,27 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <set>
 using namespace std;
 
-vector< pair<int, int> >	jewerly;
-vector<int>	bag;
-vector<int>::iterator	iter;
-int		n, k, weight, price;
+multiset< pair<int , int> >	day_ms;
+multiset< pair<int , int> >::iterator	iter;
+multiset<int>	ans_ms;
+multiset<int>::iterator	iter2;
+
+int		n, price, day;
 
 int		greedy(void)
 {
 	int		ret=0;
-	
-	for(int i=n-1; 0<=i; i--)
+
+	for(iter=day_ms.begin(); iter!=day_ms.end(); iter++)
 	{
-		iter = lower_bound(bag.begin(), bag.end(), jewerly[i].second);
-		if (*iter < jewerly[i].second)
-			continue ;
-		ret += jewerly[i].first;
-		bag.erase(iter);
-		k--;
-		if (!k)
-			break;
+		ret += iter->second;
+		ans_ms.insert(iter->second);
+		if (iter->first < ans_ms.size())
+		{
+			ret -= *ans_ms.begin();
+			ans_ms.erase(ans_ms.begin());
+		}
 	}
 	return (ret);
 }
@@ -30,22 +30,15 @@ int		greedy(void)
 
 int		main(void)
 {
-	ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
-	cin>>n>>k;
+	cin>>n;
 	for(int i=0; i<n; i++)
 	{
-		cin>>weight>>price;
-		jewerly.push_back(make_pair(price, weight));
+		cin>>price>>day;
+		day_ms.insert(make_pair(day, price));
 	}
-	sort(jewerly.begin(), jewerly.end());
-	for(int i=0; i<k; i++)
-	{
-		cin>>weight;
-		bag.push_back(weight);
-	}
-	sort(bag.begin(), bag.end());
 	cout<<greedy()<<'\n';
 }

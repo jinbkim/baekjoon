@@ -1,66 +1,58 @@
 #include <iostream>
-#include <algorithm>
-#include <vector>
-#include <cstring>
 #include <set>
-
 using namespace std;
-vector<vector<int>>	vv;
+
+multiset< pair<int, int> >	jewelry;
+multiset< pair<int, int> >::iterator	j_iter;
 multiset<int>	bag;
-multiset<int>::iterator iter;
+multiset<int>::iterator	b_iter;
 
-int	n, k, c, ret;
+int		n, k, weight, price;
 
-void	put_in(void)
+long long	greedy(void)
 {
-	multiset<int>::iterator iter;
+	long long	ret = 0;
 
-	iter = bag.lower_bound(vv.back()[1]);
-
-	if (iter != bag.end())
+	j_iter = jewelry.end();
+	while (true)
 	{
-		bag.erase(iter);
-		ret += vv.back()[0];
-		c++;
+		j_iter--;
+		if (bag.empty())
+			break ;
+		b_iter = bag.lower_bound(j_iter->second);
+		if (b_iter == bag.end())
+		{
+			if (j_iter == jewelry.begin())
+				break ;
+			else
+				continue ;
+		}
+		ret += j_iter->first;
+		bag.erase(b_iter);
+		if (j_iter == jewelry.begin())
+			break ;
 	}
-
-	vv.pop_back();
+	return (ret);
 }
 
-int		main(void)
+
+
+int			main(void)
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
 	cin>>n>>k;
 	for(int i=0; i<n; i++)
 	{
-		vector<int>	v(2);
-		cin>>v[1]>>v[0];
-		vv.push_back(v);
+		cin>>weight>>price;
+		jewelry.insert(make_pair(price, weight));
 	}
 	for(int i=0; i<k; i++)
 	{
-		int temp;
-
-		cin>>temp;
-		bag.insert(temp);
+		cin>>weight;
+		bag.insert(weight);
 	}
-	sort(vv.begin(), vv.end());
-
-	c = 0;
-	ret = 0;
-	for(int i=n-1; 0<=i; i--)
-	{
-		// put_in();
-		vector <int>v = vv[i];
-		iter = bag.lower_bound(v[1]);
-		if (iter != bag.end())
-		{
-			bag.erase(iter);
-			ret += v[0];
-			c++;
-		}
-		if (c == k)
-			break ;
-	}
-	cout<<ret<<endl;
-
+	cout<<greedy()<<'\n';
 }
