@@ -1,66 +1,69 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <cstring>
-
+#include <algorithm>
 using namespace std;
 
-int	v[10001];
-int	n, ret, zero_n;
+vector<int>	vec;
+int		n;
 
-bool	comp(int n1, int n2)
+int		greedy(void)
 {
-	return (n1 > n2);
-}
-
-void	init(void)
-{
-	memset(v, 0,sizeof(v));
-	ret = 0;
-	zero_n = 0;
-}
-
-void	tie_num(void)
-{
-	int	i, j;
-
-	i = 0;
-	while (1)
+	bool	flag=false;
+	int		i, temp=0, ret=0;
+	
+	for(i=0; vec[i]<0 && i<n; i++)
 	{
-		if (v[i] <= 1 || v[i + 1] <= 1)
-			break ;
-		ret += (v[i] * v[i + 1]);
-		i += 2;
-	}
-	while (v[i] > 0)
-		ret += v[i++];
-	while (v[i] == 0 && i++ < n)
-		zero_n++;
-	j = i;
-	i = n - 1;
-	while (j <= i - 1)
-	{
-		ret += (v[i] * v[i - 1]);
-		i -= 2;
-	}
-	for (i=i; j<=i; i--)
-	{
-		if (zero_n)
+		if (!flag)
 		{
-			zero_n--;
-			continue ;
+			temp = vec[i];
+			flag = true;
 		}
-		ret += v[i];
+		else
+		{
+			ret += vec[i] * temp;
+			flag = false;
+		}		
 	}
-	cout<<ret<<endl;
+	
+	for(; vec[i]==0 && i<n; i++)
+		temp=0;
+	if (flag)
+		ret += temp;
+
+	for(; vec[i]== 1 && i<n; i++)
+		ret++;
+
+	if (i<n && (n-1-i)%2 == 0)
+		ret += vec[i++];
+	flag = false;
+	for(; i<n; i++)
+	{
+		if (!flag)
+		{
+			temp = vec[i];
+			flag = true;
+		}
+		else
+		{
+			ret += vec[i] * temp;
+			flag = false;
+		}	
+	}
+	return (ret);
 }
+
+
 
 int		main(void)
 {
-	init();
-	scanf("%d", &n);
+	int		data;
+
+	cin>>n;
 	for(int i=0; i<n; i++)
-		cin>>v[i];
-	sort(v, v + n, comp);
-	tie_num();
+	{
+		cin>>data;
+		vec.push_back(data);
+	}
+	sort(vec.begin(), vec.end());
+	cout<<greedy()<<'\n';
 }
