@@ -1,32 +1,32 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <cstring>
 using namespace std;
 
-vector< pair<int, int> >	vec;
-int		visted[102];
-int		n, k, w, v, ret;
+int		dp[102][100002];
+int		w[102], v[102];
+int		n, k;
 
-void	solve(int a, int b)
+int		solve(int idx, int sum)
 {
-	if (k < a)
-		return ;
-	for(int i=0; i<vec.size(); i++)
-	{
-		solve(a, vec[i])
-	}
+	int		ret1=0, ret2=0;
+
+	if (dp[idx][sum])
+		return (dp[idx][sum]);
+	if (idx == n)
+		return (0);
+	if (w[idx]+sum <= k)
+		ret1 = v[idx]+solve(idx+1, w[idx]+sum);
+	ret2 = solve(idx+1, sum);
+	dp[idx][sum] = max(ret1, ret2);
+	return (dp[idx][sum]);
 }
 
 int		main(void)
 {
-	memset(visted, 0, sizeof(visted));
+	memset(dp, 0, sizeof(dp));
 	cin>>n>>k;
 	for(int i=0; i<n; i++)
-	{
-		cin>>w>>k;
-		vec.push_back(make_pair(w, k));
-	}
-	sort(vec.begin(), vec.end());
-	solve(0, 0);
-	cout<<ret<<'\n';
+		cin>>w[i]>>v[i];
+	cout<<solve(0, 0)<<'\n';
 }
