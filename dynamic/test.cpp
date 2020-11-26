@@ -1,49 +1,51 @@
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 using namespace std;
 
-bool	dp[32][30000];
-int		w1[32], w2[9];
-int		n, m;
+int		arr[302][22];
+int		k, l, m, n;
 
 void	init(void)
 {
-	memset(dp, false, sizeof(dp));
+	memset(arr, 0, sizeof(arr));
 }
 
-void	solve(int idx, int sum)
+int		solve(int idx, int invest, int profit)
 {
-	if (dp[idx][sum])
-		return ;
-	if (idx == n)
+	int		ret=0;
+
+	if (m < idx)
+		return (0);
+	for(int i=0; i<=n; i++)
 	{
-		if (sum >= 0)
-			dp[idx][sum] = true;
-		return ;
+		if (invest+i <= n)
+			ret = max(ret, arr[i][idx]+solve(idx+1, invest+i, profit+arr[i][idx]));
 	}
-	dp[idx][sum] = true;
-	solve(idx+1, sum+w1[idx]);
-	solve(idx+1, sum-w1[idx]);
-	solve(idx+1, sum);
+	cout<<"idx : "<<idx<<", invest : "<<invest<<", profit : "<<profit<<", ret : "<<ret<<'\n';
+	return (ret);
 }
-
-
 
 int		main(void)
 {
-	cin>>n;
-	for(int i=0; i<n; i++)
-		cin>>w1[i];
-	cin>>m;
-	for(int i=0; i<m; i++)
-		cin>>w2[i];
 	init();
-	solve(0, 15000);
-	for(int i=0; i<m; i++)
+	cin>>n>>m;
+	for(int i=0; i<n; i++)
 	{
-		if (dp[n][w2[i]+15000])
-			cout<<'Y'<<' ';
-		else
-			cout<<'N'<<' ';
+		cin>>l;
+		for(int j=1; j<=m; j++)
+		{
+			cin>>k;
+			arr[i+1][j] = k;
+		}
 	}
+	// for(int i=0; i<=n; i++)
+	// {
+	// 	for(int j=0; j<=m; j++)
+	// 	{
+	// 		cout<<"i : "<<i<<", j : "<<j<<", arr[i][j] : "<<arr[i][j]<<'\n';
+	// 	}
+	// }
+		
+	cout<<solve(1, 0, 0)<<'\n';
 }
