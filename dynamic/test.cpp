@@ -1,51 +1,52 @@
 #include <iostream>
 #include <cstring>
-#include <algorithm>
 using namespace std;
 
-int		arr[302][22];
-int		k, l, m, n;
+int		dp[502][502];
+int		map[502][502];
+int		dir[4][2] = {{0,-1},{0,1},{-1,0},{1,0}};
+int		n, ret=1;
 
 void	init(void)
 {
-	memset(arr, 0, sizeof(arr));
+	memset(dp, 0, sizeof(dp));
 }
 
-int		solve(int idx, int invest, int profit)
+int		solve(int idx, int y, int x, int before_y, int before_x)
 {
-	int		ret=0;
+	int		next_x, next_y;
 
-	if (m < idx)
-		return (0);
-	for(int i=0; i<=n; i++)
+	if (dp[before_y][before_x])
 	{
-		if (invest+i <= n)
-			ret = max(ret, arr[i][idx]+solve(idx+1, invest+i, profit+arr[i][idx]));
+		dp[y][x] = dp[before_y][before_x]+1;
+		return (dp[y][x]);
 	}
-	cout<<"idx : "<<idx<<", invest : "<<invest<<", profit : "<<profit<<", ret : "<<ret<<'\n';
-	return (ret);
+
+	for(int i=0; i<4; i++)
+	{
+		next_x = dir[i][0]+x;
+		next_y = dir[i][1]+y;
+		if (next_x<n && next_y<n && 0<=next_x && 0<=next_y && map[before_y][before_x] < map[next_y][next_x])
+		{
+			dp[next_y][next_x] = solve(idx+1, next_x, next_y, y, x);
+		}
+	}
+	return (dp[y][x]);
 }
 
 int		main(void)
 {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
 	init();
-	cin>>n>>m;
+	cin>>n;
 	for(int i=0; i<n; i++)
-	{
-		cin>>l;
-		for(int j=1; j<=m; j++)
-		{
-			cin>>k;
-			arr[i+1][j] = k;
-		}
-	}
-	// for(int i=0; i<=n; i++)
-	// {
-	// 	for(int j=0; j<=m; j++)
-	// 	{
-	// 		cout<<"i : "<<i<<", j : "<<j<<", arr[i][j] : "<<arr[i][j]<<'\n';
-	// 	}
-	// }
-		
-	cout<<solve(1, 0, 0)<<'\n';
+		for(int j=0; j<n; j++)
+			cin>>map[i][j];
+	for(int i=0; i<n; i++)
+		for(int j=0; j<n; j++)
+			ret = max(ret, solve(1, i, j, i, j));
+	cout<<ret<<'\n';
 }
