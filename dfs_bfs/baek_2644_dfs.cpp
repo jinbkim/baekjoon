@@ -9,20 +9,17 @@ int		n, from, to, m, a, b;
 
 void	dfs(int cur, int idx)
 {
+	if (visit[cur])
+		return ;
+	visit[cur] = true;
 	if (cur == to)
 	{
 		cout<<idx<<'\n';
 		exit(0);
 	}
 	for(int i=0; i<vec[cur].size(); i++)
-	{
 		if (!visit[vec[cur][i]])
-		{
-			visit[vec[cur][i]] = true; 
 			dfs(vec[cur][i], idx+1);
-			visit[vec[cur][i]] = false; 
-		}
-	}
 }
 
 int		main(void)
