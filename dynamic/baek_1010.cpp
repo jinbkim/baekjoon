@@ -2,7 +2,7 @@
 #include <cstring>
 using namespace std;
 
-long long	dp[32][32];
+long long	dp[32][32];  // 메모이제이션
 long long	t, n, m;
 
 long long	combi(long long m, long long n)
