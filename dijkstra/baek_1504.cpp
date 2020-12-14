@@ -2,47 +2,44 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-
 using namespace std;
 
-#define INF	987654321
-#define	MAX	802
+#define	INF	987654321
 
-vector< pair<int, int> >	vec[MAX];
-long long	min_d[MAX];
-int		n, e, from, to, cost, edge1, edge2;
+vector< pair<int, int> >	vec[802];
+int		dis[802];
+int		path1[3];  // 1->v1->v2->n
+int		path2[3];  // 1->v2->v1->n
+int		n, e, from, to, w, v1, v2, ret;
 
-int		dijkstra(int start, int end)
+void	dijkstra(int start)
 {
 	priority_queue< pair<int, int> >	pq;
-	int	vtx1, vtx2, edge1, edge2;
+	int		v, w, next_v, next_w;
 
 	for(int i=1; i<=n; i++)
-		min_d[i] = INF;
-	min_d[start] = 0;
+		dis[i] = INF;
+	dis[start] = 0;
 	pq.push(make_pair(0, start));
 	while (!pq.empty())
 	{
-		vtx1 = pq.top().second;
-		edge1 = -pq.top().first;
+		v = pq.top().second;
+		w = -pq.top().first;
 		pq.pop();
-		if (min_d[vtx1] < edge1)
+		if (dis[v] < w)
 			continue ;
-		for(int i=0; i<vec[vtx1].size(); i++)
+		for(int i=0; i<vec[v].size(); i++)
 		{
-			vtx2 = vec[vtx1][i].first;
-			edge2 = vec[vtx1][i].second+edge1;
-			if (edge2 < min_d[vtx2])
+			next_v = vec[v][i].second;
+			next_w = vec[v][i].first+w;
+			if (next_w < dis[next_v])
 			{
-				min_d[vtx2] = edge2;
-				pq.push(make_pair(-edge2, vtx2));
+				dis[next_v] = next_w;
+				pq.push(make_pair(-next_w, next_v));
 			}
 		}
 	}
-	return (min_d[end]);
 }
-
-
 
 int		main(void)
 {
@@ -50,47 +47,26 @@ int		main(void)
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int		path[6];
-	int		ret1, ret2;
-
 	cin>>n>>e;
-	for(int i=0; i<e; i++)
+	for(int i=0; i<e; i++)  // 방향이 없는 간선
 	{
-		cin>>from>>to>>cost;
-		vec[from].push_back(make_pair(to, cost));
-		vec[to].push_back(make_pair(from, cost));
+		cin>>from>>to>>w;
+		vec[from].push_back(make_pair(w, to));
+		vec[to].push_back(make_pair(w, from));
 	}
-	cin>>edge1>>edge2;
-	path[0] = dijkstra(1, edge1);
-	path[1] = dijkstra(edge1, edge2);
-	path[2] = dijkstra(edge2, n);
-	path[3] = dijkstra(1, edge2);
-	path[4] = dijkstra(edge2, edge1);
-	path[5] = dijkstra(edge1, n);
-	ret1 = 0;
-	ret2 = 0;
-	for(int i=0; i<3; i++)
-	{
-		if(path[i] == INF)
-		{
-			ret1 = INF;
-			break ;
-		}
-		ret1 += path[i];
-	}
-	for(int i=3; i<6; i++)
-	{
-		if(path[i] == INF)
-		{
-			ret2 = INF;
-			break ;
-		}
-		ret2 += path[i];
-	}
-	if (ret1 == INF && ret2 == INF)
-	{
-		cout<<-1<<'\n';
-		return (0);
-	}
-	cout<<min(ret1, ret2)<<'\n';
+	cin>>v1>>v2;
+	dijkstra(1);  // 정점 1에서 t까지의 최단거리가 dis[t]에 저장됨
+	path1[0] = dis[v1];  // 1->v1
+	path2[0] = dis[v2];  // 1->v2
+	dijkstra(v1);  // 정점 v1에서 t까지의 최단거리가 dis[t]에 저장됨
+	path1[1] = dis[v2];  // v1->v2
+	path2[2] = dis[n];  // v1->n
+	dijkstra(v2);  // 정점 v2에서 t까지의 최단거리가 dis[t]에 저장됨
+	path2[1] = dis[v1];  // v2->v1
+	path1[2] = dis[n];  // v2->n
+	// 1->v1->v2->n vs 1->v2->v1->n
+	ret = min(path1[0]+path1[1]+path1[2], path2[0]+path2[1]+path2[2]);
+	if ((path1[0]==INF||path1[1]==INF||path1[2]==INF) && (path2[0]==INF||path2[1]==INF||path2[2]==INF))
+		ret = -1;
+	cout<<ret<<'\n';
 }
