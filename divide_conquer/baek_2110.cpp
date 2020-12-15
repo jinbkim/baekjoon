@@ -1,54 +1,52 @@
 #include <iostream>
 #include <algorithm>
+#include <cstring>
 using namespace std;
 
-#define	MAX	200002
+long long	router[200002];
+int			n, c;
 
-int		arr[MAX];
-int		n, c;
-
-int		count(int val)
+int		cnt_router(long long val)  // 설치가능한 공유기 개수 세기
 {
-	int		ret=1, spot=arr[0];
+	int		spot=router[0];  // 첫번째에는 무조건 공유기를 설치
+	int		cnt=1;
 
 	for(int i=1; i<n; i++)
-		if (val <= arr[i]-spot)
-		{
-			spot = arr[i];
-			ret++;
-		}
-	return (ret);
+		// 거리가 val이상 떨어지면 공유기를 설치하고 숫자를셈
+		if (val <= router[i]-spot && cnt++)
+			spot = router[i];  // 공유기 설치
+	return (cnt);
 }
 
-int		bs(long long left, long long right)
+long long	binary_search(long long left, long long right)
 {
-	long long mid, ans;
+	long long	mid, ret;
 
-	while (left <= right)
+	while(left <= right)
 	{
 		mid = (left+right)/2;
-		if (c <= count(mid))
+		if (cnt_router(mid) < c)
+			right = mid-1;
+		else
 		{
-			ans = mid;
+			ret = mid;
 			left = mid+1;
 		}
-		else
-			right = mid-1;
 	}
-	return(ans);
-}	
+	return (ret);
+}
 
 
 
 int		main(void)
 {
 	ios_base::sync_with_stdio(false);
-   	cin.tie(NULL);
-   	cout.tie(NULL);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
 	cin>>n>>c;
 	for(int i=0; i<n; i++)
-		cin>>arr[i];
-	sort(arr, arr+n);
-	cout<<bs(1, 1000000000)<<'\n';
+		cin>>router[i];
+	sort(router, router+n);  // 오름차순으로 정렬
+	cout<<binary_search(0, 1000000000)<<'\n';
 }
