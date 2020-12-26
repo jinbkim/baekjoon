@@ -1,45 +1,35 @@
 #include <iostream>
-#include <cstring>
 #include <cmath>
 using namespace std;
 
-int		n, r, c, val=-1;
+int		n, r, c;
 
-// x1, y1 : 사각형의 왼쪽 위 모서리
-// x2, y2 : 사각형의 오른쪽 아래 모서리
-void	divide_conquer(int size, int x1, int y1, int x2, int y2)
+// 2^size* 2^size : 분할된 배열 사이즈
+// x, y : 분할된 배열의 맨왼쪽위 좌표
+// ret : 우리가 구하려는 해
+void	divide_conquer(int size, int x, int y, int ret)
 {
-	// 더이상 분할하지 않는 작은 문제의 해를 구함 (정복)
-	if (size == 1)
+	int		base1 = pow(2, size-1);
+	int		base2 = pow(4, size-1);
+
+	if (size == 1)  // 문제를 분할 할수 있는 최소한의 크기
 	{
-		if (x1<=c && c<=x2 && y1<=r && r<=y2)
-		{
-			if (r==y1 && c==x1)
-				val++;
-			else if (r==y1 && c==x2)
-				val+=2;
-			else if (r==y2 && c==x1)
-				val+=3;
-			else if (r==y2 && c==x2)
-				val+=4;
-			cout<<val<<'\n';
-			exit(0);
-		}
-		else
-			val += 4;
-		return ;
+		ret += 2*(r-y)+(c-x);
+		cout<<ret<<'\n';
+		exit(0);
 	}
-	// 문제를 여러개의 작은 문제들로 분할 (분할)
-	divide_conquer(size-1, x1, y1, (x1+x2+1)/2-1, (y1+y2+1)/2-1);
-	divide_conquer(size-1, (x1+x2+1)/2, y1, x2, (y1+y2+1)/2-1);
-	divide_conquer(size-1, x1, (y1+y2+1)/2, (x1+x2+1)/2-1, y2);
-	divide_conquer(size-1, (x1+x2+1)/2, (y1+y2+1)/2, x2, y2);
+	if (r<y+base1 && c<x+base1)  // 왼쪽 위
+		divide_conquer(size-1, x, y, ret);
+	else if (r<y+base1 && x+base1<=c)  // 오른쪽 위
+		divide_conquer(size-1, x+pow(2, size-1), y, ret+base2);
+	else if (y+base1<=r && c<x+base1)  // 왼쪽 아래
+		divide_conquer(size-1, x, y+pow(2, size-1), ret+2*base2);
+	else  // 오른쪽 아래
+		divide_conquer(size-1, x+pow(2, size-1), y+pow(2, size-1), ret+3*base2);
 }
-
-
 
 int		main(void)
 {
 	cin>>n>>r>>c;
-	divide_conquer(n, 0, 0, pow(2,n)-1, pow(2,n)-1);
+	divide_conquer(n, 0, 0, 0);
 }
