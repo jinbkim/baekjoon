@@ -79,6 +79,7 @@
 		"mutex": "cpp",
 		"optional": "cpp",
 		"ratio": "cpp",
-		"sstream": "cpp"
+		"sstream": "cpp",
+		"map": "cpp"
 	}
 }
