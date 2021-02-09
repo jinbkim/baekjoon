@@ -4,33 +4,32 @@
 #include <queue>
 #include <algorithm>
 using namespace std;
-
-#define	MAX	10002
+#define	MAX 10002
 
 vector<int>	vec[MAX];
 int		inDegree[MAX];
 int		dp[MAX];
 int		t[MAX];
-int		n, m, node1, node2;
+int		n, m;
 
 void	topologySort(void)
 {
 	queue<int>	q;
-	int		time;
+	int		n1, n2;
 
 	for(int i=1; i<=n; i++)
 		if (!inDegree[i])
 			q.push(i);
 	while (!q.empty())
 	{
-		node1 = q.front();
+		n1 = q.front();
 		q.pop();
-		for(int j=0; j<vec[node1].size(); j++)
+		for(int i=0; i<vec[n1].size(); i++)
 		{
-			node2 = vec[node1][j];
-			dp[node2] = max(dp[node2], t[node2]+dp[node1]);
-			if (!(--inDegree[node2]))
-				q.push(node2);
+			n2 = vec[n1][i];
+			dp[n2] = max(dp[n2], t[n2]+dp[n1]);
+			if (!(--inDegree[n2]))
+				q.push(n2);
 		}
 	}
 }
@@ -42,16 +41,15 @@ int		main(void)
     cout.tie(NULL);
 
 	cin>>n;
-	memset(inDegree, 0, sizeof(inDegree));
 	memset(dp, 0, sizeof(dp));
 	for(int i=1; i<=n; i++)
 	{
 		cin>>t[i]>>m;
 		dp[i] = t[i];
-		for(int j=0; j<m; j++)
+		for(int j=0, node; j<m; j++)
 		{
-			cin>>node1;
-			vec[node1].push_back(i);
+			cin>>node;
+			vec[node].push_back(i);
 			inDegree[i]++;
 		}
 	}
